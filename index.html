@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartSpeak AI Tutor</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top left, #89f7fe, #66a6ff);
+      background-attachment: fixed;
+      overflow: hidden;
+    }
+    .chat-container {
+      width: 95%;
+      max-width: 500px;
+      height: 85vh;
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(15px);
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+      overflow: hidden;
+    }
+    .chat-header {
+      padding: 1rem;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.25);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1px;
+      text-shadow: 0 0 5px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    .clear-btn {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.3);
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: #fff;
+      transition: 0.2s;
+    }
+    .clear-btn:hover {
+      background: rgba(255,255,255,0.5);
+    }
+    .settings-panel {
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+    }
+    .setting-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .setting-group label {
+      font-size: 0.75rem;
+      color: #fff;
+      font-weight: 600;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .setting-group select,
+    .setting-group input {
+      padding: 0.4rem 0.6rem;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      font-size: 0.85rem;
+      outline: none;
+      cursor: pointer;
+    }
+    .setting-group input[type="range"] {
+      width: 100px;
+    }
+    .chat-box {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .bubble {
+      padding: 0.75rem 1rem;
+      border-radius: 15px;
+      max-width: 80%;
+      line-height: 1.4;
+      word-wrap: break-word;
+      animation: fadeIn 0.3s ease;
+    }
+    .user {
+      align-self: flex-end;
+      background: rgba(102,166,255,0.9);
+      color: #fff;
+      border-bottom-right-radius: 2px;
+    }
+    .ai {
+      align-self: flex-start;
+      background: rgba(255,255,255,0.85);
+      color: #333;
+      border-bottom-left-radius: 2px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .typing {
+      align-self: flex-start;
+      background: rgba(255,255,255,0.85);
+      padding: 1rem;
+      border-radius: 15px;
+      border-bottom-left-radius: 2px;
+    }
+    .typing-dots {
+      display: flex;
+      gap: 5px;
+    }
+    .typing-dots span {
+      width: 8px;
+      height: 8px;
+      background: #666;
+      border-radius: 50%;
+      animation: bounce 1.4s infinite;
+    }
+    .typing-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    .typing-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    .listen-btn {
+      display: block;
+      margin-top: 6px;
+      background: rgba(102,166,255,0.1);
+      color: #0072ff;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 12px;
+      padding: 4px 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .listen-btn:hover {
+      background: rgba(102,166,255,0.25);
+      transform: scale(1.05);
+    }
+    .chat-input {
+      display: flex;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      gap: 0.5rem;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 20px;
+      outline: none;
+      font-size: 1rem;
+    }
+    .chat-input button {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 20px;
+      background: #66a6ff;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .chat-input button:hover {
+      background: #4b8efc;
+    }
+    .chat-input button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .mic-btn {
+      background: #ff6b6b !important;
+    }
+    .mic-btn:hover {
+      background: #ee5a5a !important;
+    }
+    .mic-btn.active {
+      background: #51cf66 !important;
+      animation: pulse 1s infinite;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-10px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      🧠 SmartSpeak AI English Tutor
+      <button class="clear-btn" onclick="clearConversation()">🔄 New Chat</button>
+    </div>
+    
+    <div class="settings-panel">
+      <div class="setting-group">
+        <label>🌍 Accent</label>
+        <select id="accentSelect">
+          <option value="en-US">🇺🇸 American</option>
+          <option value="en-GB">🇬🇧 British</option>
+          <option value="en-AU">🇦🇺 Australian</option>
+          <option value="en-IN">🇮🇳 Indian</option>
+          <option value="en-PH" selected>🇵🇭 Filipino</option>
+        </select>
+      </div>
+      
+      <div class="setting-group">
+        <label>⚡ Speed</label>
+        <input type="range" id="speedControl" min="0.5" max="2" step="0.1" value="1">
+      </div>
+      
+      <div class="setting-group">
+        <label>🎵 Pitch</label>
+        <input type="range" id="pitchControl" min="0.5" max="2" step="0.1" value="1">
+      </div>
+    </div>
+
+    <div id="chatBox" class="chat-box"></div>
+    
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Type your message..." />
+      <button id="micBtn" class="mic-btn">🎤</button>
+      <button id="sendBtn">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chatBox");
+    const userInput = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const micBtn = document.getElementById("micBtn");
+    const accentSelect = document.getElementById("accentSelect");
+    const speedControl = document.getElementById("speedControl");
+    const pitchControl = document.getElementById("pitchControl");
+
+    let recognition;
+    let isListening = false;
+    let conversationHistory = [];
+
+    // Initialize Speech Recognition
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.lang = 'en-US';
+      
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        userInput.value = transcript;
+      };
+      
+      recognition.onend = () => {
+        isListening = false;
+        micBtn.classList.remove('active');
+        micBtn.textContent = '🎤';
+      };
+      
+      recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        isListening = false;
+        micBtn.classList.remove('active');
+        micBtn.textContent = '🎤';
+      };
+    }
+
+    // Toggle microphone
+    micBtn.addEventListener('click', () => {
+      if (!recognition) {
+        alert('Speech recognition is not supported in your browser. Please use Chrome, Edge, or Safari.');
+        return;
+      }
+      
+      if (isListening) {
+        recognition.stop();
+      } else {
+        try {
+          recognition.start();
+          isListening = true;
+          micBtn.classList.add('active');
+          micBtn.textContent = '🔴';
+        } catch (err) {
+          console.error('Recognition start error:', err);
+        }
+      }
+    });
+
+    function speakText(text) {
+      speechSynthesis.cancel(); // Stop any ongoing speech
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = accentSelect.value;
+      utter.rate = parseFloat(speedControl.value);
+      utter.pitch = parseFloat(pitchControl.value);
+      speechSynthesis.speak(utter);
+    }
+
+    function showTypingIndicator() {
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'typing';
+      typingDiv.id = 'typing-indicator';
+      typingDiv.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+      chatBox.appendChild(typingDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function hideTypingIndicator() {
+      const typingDiv = document.getElementById('typing-indicator');
+      if (typingDiv) typingDiv.remove();
+    }
+
+    function clearConversation() {
+      if (confirm('Are you sure you want to start a new conversation?')) {
+        conversationHistory = [];
+        chatBox.innerHTML = '';
+        showWelcomeMessage();
+      }
+    }
+
+    async function sendMessage() {
+      const message = userInput.value.trim();
+      if (!message) return;
+
+      // Disable input while processing
+      sendBtn.disabled = true;
+      userInput.disabled = true;
+
+      // Display user message
+      const userBubble = document.createElement('div');
+      userBubble.className = 'bubble user';
+      userBubble.textContent = message;
+      chatBox.appendChild(userBubble);
+      chatBox.scrollTop = chatBox.scrollHeight;
+      
+      // Add to conversation history
+      conversationHistory.push({ role: "user", content: message });
+      
+      userInput.value = "";
+      
+      // Show typing indicator
+      showTypingIndicator();
+
+      try {
+        // Send conversation history to API
+        const res = await fetch('/.netlify/functions/ask-ai', {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            message: message,
+            history: conversationHistory.slice(-10) // Send last 10 messages for context
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error(`Server error: ${res.status}`);
+        }
+
+        const data = await res.json();
+        
+        hideTypingIndicator();
+        
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        const aiReply = data.reply || "I apologize, but I couldn't generate a response. Please try again.";
+        
+        // Add AI response to history
+        conversationHistory.push({ role: "assistant", content: aiReply });
+
+        // Display AI reply with Listen Again button
+        const aiBubble = document.createElement("div");
+        aiBubble.className = "bubble ai";
+        const escapedReply = aiReply.replace(/'/g, "\\'").replace(/\n/g, '<br>');
+        aiBubble.innerHTML = `
+          ${aiReply.replace(/\n/g, '<br>')}
+          <button class="listen-btn" onclick="speakText(\`${aiReply.replace(/`/g, '\\`')}\`)">🎧 Listen Again</button>
+        `;
+        chatBox.appendChild(aiBubble);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Auto speak AI reply
+        speakText(aiReply);
+
+      } catch (error) {
+        hideTypingIndicator();
+        console.error('Error:', error);
+        
+        const errorBubble = document.createElement("div");
+        errorBubble.className = "bubble ai";
+        errorBubble.innerHTML = `
+          ❌ Sorry, I'm having trouble connecting. Please check:<br>
+          • Your internet connection<br>
+          • If the API is properly configured<br>
+          • Try again in a moment
+        `;
+        chatBox.appendChild(errorBubble);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      } finally {
+        // Re-enable input
+        sendBtn.disabled = false;
+        userInput.disabled = false;
+        userInput.focus();
+      }
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    userInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter" && !sendBtn.disabled) sendMessage();
+    });
+
+    function showWelcomeMessage() {
+      const welcomeMsg = "Hello! I'm SmartSpeak, your AI English tutor. I'm here to help you improve your English skills through natural conversation. Feel free to ask me questions, practice speaking, or discuss any topic you'd like. How can I help you today?";
+      conversationHistory.push({ role: "assistant", content: welcomeMsg });
+      
+      const aiBubble = document.createElement("div");
+      aiBubble.className = "bubble ai";
+      aiBubble.innerHTML = `
+        ${welcomeMsg}
+        <button class="listen-btn" onclick="speakText(\`${welcomeMsg}\`)">🎧 Listen Again</button>
+      `;
+      chatBox.appendChild(aiBubble);
+      speakText(welcomeMsg);
+    }
+
+    // Display welcome message on load
+    window.addEventListener('load', showWelcomeMessage);
+
+    // Make speakText globally accessible for onclick handlers
+    window.speakText = speakText;
+    window.clearConversation = clearConversation;
+  </script>
+</body>
+</html>
