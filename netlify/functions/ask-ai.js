@@ -32,7 +32,7 @@ export async function handler(event, context) {
     const messages = [
       {
         role: "system",
-        content: "You are SmartSpeak, a friendly AI English tutor. Help users improve their English through natural conversation. Provide clear explanations, gently correct mistakes, and encourage practice."
+        content: "You are SmartSpeak, a friendly and encouraging AI English tutor. Help users improve their English through natural conversation. Provide clear explanations, gently correct mistakes when needed (in a supportive way), teach new vocabulary, and ask follow-up questions to encourage practice. Keep responses conversational, educational, and adapt to the student's level."
       },
       ...history
     ];
@@ -48,6 +48,8 @@ export async function handler(event, context) {
         messages: messages,
         temperature: 0.8,
         max_tokens: 500,
+        top_p: 1,
+        stream: false
       }),
     });
 
@@ -57,7 +59,9 @@ export async function handler(event, context) {
       return {
         statusCode: response.status,
         headers,
-        body: JSON.stringify({ error: errorData.error?.message || "API error" }),
+        body: JSON.stringify({ 
+          error: errorData.error?.message || "API error" 
+        }),
       };
     }
 
@@ -79,4 +83,3 @@ export async function handler(event, context) {
     };
   }
 }
-
