@@ -99,6 +99,36 @@
       color: #66a6ff;
       text-decoration: none;
     }
+    
+    /* Auth Footer - Animated Developer Credit */
+    .auth-footer {
+      margin-top: 2rem;
+      text-align: center;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(0,0,0,0.1);
+    }
+    .auth-footer-text {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: linear-gradient(
+        90deg,
+        #ff6b6b,
+        #feca57,
+        #48dbfb,
+        #ff9ff3,
+        #54a0ff,
+        #5f27cd,
+        #00d2d3,
+        #ff6b6b
+      );
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 5s ease infinite;
+    }
+    
     .success-message {
       background: #d4edda;
       color: #155724;
@@ -139,7 +169,6 @@
       width: 100%;
       height: 100vh;
       display: flex;
-      padding-bottom: 55px; /* Footer space */
     }
     
     /* ============================================
@@ -321,16 +350,12 @@
     .chat-box {
       flex: 1;
       padding: 1rem;
-      padding-bottom: 70px;
+      padding-bottom: 20px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
       scroll-behavior: smooth;
-    }
-    /* Mobile: Extra padding when footer is hidden */
-    .chat-box.active-chat {
-      padding-bottom: 20px;
     }
     .bubble {
       padding: 0.75rem 1rem;
@@ -443,59 +468,6 @@
     }
     
     /* ============================================
-       FOOTER STYLES - AUTO HIDE DURING CHAT
-       ============================================ */
-    .footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 14px;
-      text-align: center;
-      background: rgba(30, 30, 30, 0.96);
-      backdrop-filter: blur(15px);
-      font-size: 0.95rem;
-      z-index: 1000;
-      box-shadow: 0 -3px 15px rgba(0,0,0,0.3);
-      transition: transform 0.3s ease, opacity 0.3s ease;
-    }
-    .footer.hidden-footer {
-      transform: translateY(100%);
-      opacity: 0;
-      pointer-events: none;
-    }
-    
-    /* Mobile: Completely remove footer from layout when hidden */
-    @media (max-width: 768px) {
-      .footer.hidden-footer {
-        display: none;
-      }
-      .app-container.chat-active {
-        padding-bottom: 0;
-      }
-    }
-    .footer-text {
-      background: linear-gradient(
-        90deg,
-        #ff6b6b,
-        #feca57,
-        #48dbfb,
-        #ff9ff3,
-        #54a0ff,
-        #5f27cd,
-        #00d2d3,
-        #ff6b6b
-      );
-      background-size: 400% 400%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: gradientShift 5s ease infinite;
-      font-weight: 800;
-      letter-spacing: 1px;
-    }
-    
-    /* ============================================
        CUSTOM MODAL
        ============================================ */
     .custom-modal {
@@ -592,10 +564,6 @@
       }
       .app-container {
         flex-direction: column;
-        padding-bottom: 60px; /* Default with footer */
-      }
-      .app-container.chat-active {
-        padding-bottom: 0; /* No footer during chat */
       }
       .chat-header {
         font-size: 1.1rem;
@@ -608,15 +576,8 @@
         flex: 1;
         min-width: 70px;
       }
-      .footer {
-        font-size: 0.75rem;
-        padding: 10px;
-      }
       .chat-box {
-        padding-bottom: 20px; /* Reduced padding on mobile */
-      }
-      .chat-box.active-chat {
-        padding-bottom: 10px; /* Even less when chatting */
+        padding-bottom: 15px;
       }
     }
     .menu-toggle {
@@ -662,6 +623,9 @@
     <div class="auth-link">
       Don't have an account? <a href="#" onclick="showSignup(); return false;">Sign Up</a>
     </div>
+    <div class="auth-footer">
+      <div class="auth-footer-text">Developed by Heber Mayormita</div>
+    </div>
   </div>
 
   <!-- ============================================
@@ -676,6 +640,9 @@
     <button onclick="signup()">Sign Up</button>
     <div class="auth-link">
       Already have an account? <a href="#" onclick="showLogin(); return false;">Login</a>
+    </div>
+    <div class="auth-footer">
+      <div class="auth-footer-text">Developed by Heber Mayormita</div>
     </div>
   </div>
 
@@ -720,6 +687,9 @@
     
     <div class="auth-link">
       <a href="#" onclick="showLogin(); return false;">Back to Login</a>
+    </div>
+    <div class="auth-footer">
+      <div class="auth-footer-text">Developed by Heber Mayormita</div>
     </div>
   </div>
 
@@ -808,13 +778,6 @@
     </div>
   </div>
 
-  <!-- ============================================
-       FOOTER
-       ============================================ -->
-  <div class="footer" id="appFooter">
-    <div class="footer-text">Developed by Heber Mayormita</div>
-  </div>
-  
   <!-- Mobile Menu Toggle -->
   <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
   <script>
@@ -840,7 +803,6 @@
     let selectedVoice = null;
     let otpToken = null; // Store OTP verification token
     let resetEmailAddress = null; // Store email for password reset
-    let hasActiveConversation = false; // Track if user is in active conversation
 
     // ============================================
     // VOICE & SPEECH FUNCTIONS - FIXED
@@ -1220,9 +1182,7 @@
       currentUser = null;
       currentConversationId = null;
       conversationHistory = [];
-      hasActiveConversation = false;
       document.getElementById('chatBox').innerHTML = '';
-      showFooter(); // Show footer on logout
       showLogin();
     }
 
@@ -1272,22 +1232,6 @@
 
     function toggleSidebar() {
       document.querySelector('.sidebar').classList.toggle('open');
-    }
-
-    // ============================================
-    // FOOTER AUTO-HIDE FUNCTIONALITY
-    // ============================================
-    
-    function hideFooter() {
-      document.getElementById('appFooter').classList.add('hidden-footer');
-      document.getElementById('appContainer').classList.add('chat-active');
-      document.getElementById('chatBox').classList.add('active-chat');
-    }
-    
-    function showFooter() {
-      document.getElementById('appFooter').classList.remove('hidden-footer');
-      document.getElementById('appContainer').classList.remove('chat-active');
-      document.getElementById('chatBox').classList.remove('active-chat');
     }
 
     // ============================================
@@ -1349,11 +1293,7 @@
       
       currentConversationId = data.id;
       conversationHistory = [];
-      hasActiveConversation = false;
       document.getElementById('chatBox').innerHTML = '';
-      
-      // Show footer when starting new conversation
-      showFooter();
       
       // Re-enable controls
       document.getElementById('sendBtn').disabled = false;
@@ -1385,15 +1325,6 @@
         role: msg.role,
         content: msg.content
       }));
-      
-      // Check if conversation has messages
-      hasActiveConversation = data.length > 0;
-      
-      if (hasActiveConversation) {
-        hideFooter(); // Hide footer if conversation has messages
-      } else {
-        showFooter();
-      }
       
       data.forEach(msg => {
         const bubble = document.createElement('div');
@@ -1438,9 +1369,7 @@
       if (conversationId === currentConversationId) {
         currentConversationId = null;
         conversationHistory = [];
-        hasActiveConversation = false;
         document.getElementById('chatBox').innerHTML = '';
-        showFooter(); // Show footer when conversation is deleted
       }
       
       loadConversations();
@@ -1558,12 +1487,6 @@
 
       if (!currentConversationId) {
         await startNewConversation();
-      }
-
-      // Hide footer when user sends first message
-      if (!hasActiveConversation) {
-        hideFooter();
-        hasActiveConversation = true;
       }
 
       sendBtn.disabled = true;
