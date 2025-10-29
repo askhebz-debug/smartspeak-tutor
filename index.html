@@ -187,18 +187,47 @@
       margin-bottom: 0.8rem;
       word-break: break-all;
     }
-    .logout-btn {
+    .guest-badge {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
       padding: 0.5rem 1rem;
-      background: #ff6b6b;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 0.85rem;
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+    }
+    .trial-counter {
+      background: rgba(255,107,107,0.1);
+      color: #ff6b6b;
+      padding: 0.5rem;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 0.8rem;
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+    }
+    .logout-btn, .signup-btn {
+      padding: 0.5rem 1rem;
       color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-size: 0.9rem;
       width: 100%;
+      margin-bottom: 0.5rem;
+    }
+    .logout-btn {
+      background: #ff6b6b;
     }
     .logout-btn:hover {
       background: #ee5a5a;
+    }
+    .signup-btn {
+      background: #51cf66;
+    }
+    .signup-btn:hover {
+      background: #40c057;
     }
     .conversations-list {
       flex: 1;
@@ -520,6 +549,34 @@
     .modal-btn-confirm:hover {
       background: #ee5a5a;
     }
+    .modal-btn-signup {
+      background: #51cf66;
+      color: white;
+    }
+    .modal-btn-signup:hover {
+      background: #40c057;
+    }
+    
+    /* Trial Limit Modal */
+    .trial-limit-content {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2.5rem;
+      border-radius: 20px;
+      max-width: 450px;
+      width: 90%;
+      text-align: center;
+      animation: fadeIn 0.3s;
+    }
+    .trial-limit-content h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .trial-limit-content p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      opacity: 0.95;
+    }
     
     /* ============================================
        ANIMATIONS
@@ -598,6 +655,129 @@
     .hidden {
       display: none !important;
     }
+    
+    /* Skip Login Button */
+    .skip-login-btn {
+      background: transparent !important;
+      color: #66a6ff !important;
+      border: 2px solid #66a6ff !important;
+      font-size: 0.9rem !important;
+      padding: 0.6rem !important;
+    }
+    .skip-login-btn:hover {
+      background: rgba(102,166,255,0.1) !important;
+    }
+    
+    /* README Section */
+    .readme-section {
+      margin: 1rem;
+      background: rgba(255,255,255,0.5);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .readme-header {
+      padding: 1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: 0.3s;
+    }
+    .readme-header:hover {
+      background: linear-gradient(135deg, #5568d3 0%, #6a4091 100%);
+    }
+    .readme-icon {
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+    .readme-icon.expanded {
+      transform: rotate(180deg);
+    }
+    .readme-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      background: rgba(255,255,255,0.95);
+    }
+    .readme-content.show {
+      max-height: 600px;
+      overflow-y: auto;
+    }
+    .readme-content-inner {
+      padding: 1rem;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #333;
+    }
+    .readme-content h3 {
+      color: #667eea;
+      font-size: 1rem;
+      margin: 1rem 0 0.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .readme-content h3:first-child {
+      margin-top: 0;
+    }
+    .readme-content ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0;
+    }
+    .readme-content li {
+      padding: 0.4rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+    .readme-content li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #51cf66;
+      font-weight: bold;
+    }
+    .readme-content p {
+      margin: 0.5rem 0;
+      text-align: justify;
+    }
+    .support-box {
+      background: rgba(255,193,7,0.1);
+      padding: 0.8rem;
+      border-radius: 10px;
+      margin-top: 1rem;
+      border-left: 3px solid #ffc107;
+    }
+    .support-box strong {
+      color: #f57c00;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+    .gcash-number {
+      background: rgba(102,166,255,0.1);
+      padding: 0.5rem;
+      border-radius: 8px;
+      font-weight: 700;
+      color: #667eea;
+      text-align: center;
+      margin: 0.5rem 0;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+    }
+    
+    @media (max-width: 768px) {
+      .readme-content.show {
+        max-height: 400px;
+      }
+      .readme-content-inner {
+        font-size: 0.8rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -614,6 +794,8 @@
       <a href="#" onclick="showForgotPassword(); return false;">Forgot Password?</a>
     </div>
     <button onclick="login()">Login</button>
+    <button class="skip-login-btn" onclick="startGuestMode()">👤 Guest LogIn</button>
+    <p style="text-align: center; font-size: 0.8rem; color: #999; margin-top: -0.3rem;">Get 10 free messages to try SmartSpeak</p>
     <div class="auth-link">
       Don't have an account? <a href="#" onclick="showSignup(); return false;">Sign Up</a>
     </div>
@@ -641,13 +823,12 @@
   </div>
 
   <!-- ============================================
-       FORGOT PASSWORD PAGE - SUPABASE INTEGRATED
+       FORGOT PASSWORD PAGE
        ============================================ -->
   <div id="forgotPasswordPage" class="auth-container hidden">
     <h2>🔐 Reset Password</h2>
     <div id="forgotMessage"></div>
     
-    <!-- Step 1: Enter Email to Receive Reset Link -->
     <div id="emailStep">
       <div class="info-message">
         📧 Enter your email address and we'll send you a password reset link.
@@ -656,7 +837,6 @@
       <button onclick="sendPasswordResetEmail()">Send Reset Link</button>
     </div>
     
-    <!-- Step 2: Instructions after sending email -->
     <div id="emailSentStep" class="hidden">
       <div class="success-message">
         ✅ Password reset email sent!<br><br>
@@ -665,7 +845,6 @@
       <button onclick="showLogin()" style="margin-top: 1rem;">Back to Login</button>
     </div>
     
-    <!-- Step 3: Create New Password (shown after clicking email link) -->
     <div id="newPasswordStep" class="hidden">
       <div class="info-message">
         🔑 Create your new password
@@ -691,8 +870,52 @@
     <!-- Sidebar -->
     <div class="sidebar">
       <div class="user-profile">
-        <div class="user-email" id="userEmail"></div>
-        <button class="logout-btn" onclick="logout()">Logout</button>
+        <!-- Guest Mode -->
+        <div id="guestProfile" class="hidden">
+          <div class="guest-badge">👤 Guest Mode</div>
+          <div class="trial-counter" id="trialCounter">10 messages remaining</div>
+          <button class="signup-btn" onclick="showSignup()">📝 Sign Up to Continue</button>
+        </div>
+        
+        <!-- Logged In User -->
+        <div id="userProfile" class="hidden">
+          <div class="user-email" id="userEmail"></div>
+          <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+      </div>
+      
+      <!-- README Section -->
+      <div class="readme-section">
+        <div class="readme-header" onclick="toggleReadme()">
+          <span>📖 About SmartSpeak</span>
+          <span class="readme-icon" id="readmeIcon">▼</span>
+        </div>
+        <div class="readme-content" id="readmeContent">
+          <div class="readme-content-inner">
+            <h3>🎯 Features & Goals</h3>
+            <ul>
+              <li>Engage in natural conversation — SmartSpeak helps users practice English by talking just like in real life: friendly, relaxed, and meaningful.</li>
+              <li>Gentle grammar correction — Mistakes are part of learning! The app corrects grammar softly and supportively, always showing the correct form to help you improve naturally.</li>
+              <li>Simple vocabulary explanations — New words are explained in clear and simple terms so you can easily understand and remember them.</li>
+              <li>Follow-up questions — SmartSpeak asks engaging follow-up questions to keep the conversation flowing and to help you practice thinking and responding in English.</li>
+              <li>Adaptive learning — The app adjusts its language complexity to match your current English level: beginner, intermediate, or advanced.</li>
+              <li>Practical examples — When introducing new concepts, SmartSpeak provides useful and realistic examples for easier understanding.</li>
+              <li>Positive and patient guidance — Learning takes time! SmartSpeak celebrates your progress and motivates you every step of the way.</li>
+              <li>Conversational and educational style — Lessons feel like talking with a friend, not a teacher: relaxed, helpful, and encouraging.</li>
+            </ul>
+            
+            <h3>💬 Philosophy</h3>
+            <p>SmartSpeak isn't just about answering your questions. It's about creating a comfortable learning environment where you can freely practice, make mistakes, and grow without fear or judgment. Because the best way to learn English is through confidence and conversation.</p>
+            
+            <div class="support-box">
+              <h3>❤️ Support the Developer</h3>
+              <p>If you find SmartSpeak helpful and would like to support the developer's mission to help more people speak English fluently, you can send a small donation through:</p>
+              <strong>📱 GCash:</strong>
+              <div class="gcash-number">0969-116-8062</div>
+              <p style="font-size:0.8rem; margin-top:0.5rem;">Your contribution helps keep the service running and supports the advocacy of making English learning accessible to everyone. Thank you for your generosity and trust! 🙏</p>
+            </div>
+          </div>
+        </div>
       </div>
       
       <button class="new-chat-btn" onclick="startNewConversation()">+ New Conversation</button>
@@ -755,7 +978,21 @@
   </div>
 
   <!-- ============================================
-       CUSTOM MODAL
+       TRIAL LIMIT MODAL
+       ============================================ -->
+  <div id="trialLimitModal" class="custom-modal">
+    <div class="trial-limit-content">
+      <h2>🎯 Trial Limit Reached!</h2>
+      <p>You've reached your 10 free messages limit. Sign up now to continue using SmartSpeak and unlock unlimited conversations!</p>
+      <div class="modal-buttons">
+        <button class="modal-btn modal-btn-signup" onclick="closeTrialModal(true)">Sign Up Now</button>
+        <button class="modal-btn modal-btn-cancel" onclick="closeTrialModal(false)">Maybe Later</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       DELETE CONFIRMATION MODAL
        ============================================ -->
   <div id="customModal" class="custom-modal">
     <div class="modal-content">
@@ -779,10 +1016,14 @@
     
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
+    const TRIAL_MESSAGE_LIMIT = 10;
+    
     // ============================================
     // GLOBAL STATE
     // ============================================
     let currentUser = null;
+    let isGuestMode = false;
+    let guestMessageCount = 0;
     let currentConversationId = null;
     let conversationHistory = [];
     let recognition = null;
@@ -793,10 +1034,71 @@
     let selectedVoice = null;
 
     // ============================================
+    // GUEST/TRIAL MODE FUNCTIONS
+    // ============================================
+    
+    function startGuestMode() {
+      isGuestMode = true;
+      guestMessageCount = parseInt(localStorage.getItem('guestMessageCount') || '0');
+      
+      if (guestMessageCount >= TRIAL_MESSAGE_LIMIT) {
+        showTrialLimitModal();
+        return;
+      }
+      
+      showApp();
+      updateTrialCounter();
+      showWelcomeMessage();
+    }
+    
+    function updateTrialCounter() {
+      const remaining = TRIAL_MESSAGE_LIMIT - guestMessageCount;
+      const counter = document.getElementById('trialCounter');
+      if (counter) {
+        counter.textContent = `${remaining} message${remaining !== 1 ? 's' : ''} remaining`;
+        
+        if (remaining <= 3) {
+          counter.style.background = 'rgba(255,107,107,0.2)';
+          counter.style.color = '#ff6b6b';
+          counter.style.fontWeight = '700';
+        }
+      }
+    }
+    
+    function checkTrialLimit() {
+      if (!isGuestMode) return true;
+      
+      if (guestMessageCount >= TRIAL_MESSAGE_LIMIT) {
+        showTrialLimitModal();
+        return false;
+      }
+      
+      return true;
+    }
+    
+    function incrementGuestCount() {
+      if (isGuestMode) {
+        guestMessageCount++;
+        localStorage.setItem('guestMessageCount', guestMessageCount.toString());
+        updateTrialCounter();
+      }
+    }
+    
+    function showTrialLimitModal() {
+      document.getElementById('trialLimitModal').classList.add('show');
+    }
+    
+    function closeTrialModal(shouldSignup) {
+      document.getElementById('trialLimitModal').classList.remove('show');
+      if (shouldSignup) {
+        showSignup();
+      }
+    }
+
+    // ============================================
     // VOICE & SPEECH FUNCTIONS
     // ============================================
     
-    // Load voices when available
     function loadVoices() {
       availableVoices = speechSynthesis.getVoices();
       if (availableVoices.length > 0) {
@@ -804,7 +1106,6 @@
       }
     }
     
-    // Load voices immediately and on change
     loadVoices();
     if (speechSynthesis.onvoiceschanged !== undefined) {
       speechSynthesis.onvoiceschanged = loadVoices;
@@ -932,12 +1233,10 @@
     async function checkAuth() {
       const { data: { user } } = await supabase.auth.getUser();
       
-      // Check if this is a password recovery callback
       const hashParams = new URLSearchParams(window.location.hash.substring(1));
       const type = hashParams.get('type');
       
       if (type === 'recovery') {
-        // User clicked password reset link in email
         showForgotPassword();
         document.getElementById('emailStep').classList.add('hidden');
         document.getElementById('emailSentStep').classList.add('hidden');
@@ -948,6 +1247,7 @@
       
       if (user) {
         currentUser = user;
+        isGuestMode = false;
         showApp();
         loadConversations();
       } else {
@@ -973,6 +1273,8 @@
         showMessage('loginMessage', error.message, 'error');
       } else {
         currentUser = data.user;
+        isGuestMode = false;
+        localStorage.removeItem('guestMessageCount');
         showApp();
         loadConversations();
       }
@@ -1011,13 +1313,6 @@
       }
     }
 
-    // ============================================
-    // PASSWORD RESET - SUPABASE INTEGRATED
-    // ============================================
-    
-    /**
-     * Send password reset email using Supabase
-     */
     async function sendPasswordResetEmail() {
       const email = document.getElementById('resetEmail').value.trim();
       
@@ -1026,14 +1321,12 @@
         return;
       }
       
-      // Validate email format
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         showMessage('forgotMessage', 'Please enter a valid email address', 'error');
         return;
       }
       
-      // Get the current URL origin for redirect
       const redirectUrl = window.location.origin + window.location.pathname;
       
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -1045,15 +1338,11 @@
         return;
       }
       
-      // Show success step
       document.getElementById('emailStep').classList.add('hidden');
       document.getElementById('emailSentStep').classList.remove('hidden');
       document.getElementById('forgotMessage').innerHTML = '';
     }
     
-    /**
-     * Update password after user clicks email link
-     */
     async function updatePassword() {
       const newPassword = document.getElementById('newPassword').value;
       const confirmPassword = document.getElementById('confirmNewPassword').value;
@@ -1073,7 +1362,6 @@
         return;
       }
       
-      // Update password in Supabase
       const { error } = await supabase.auth.updateUser({
         password: newPassword
       });
@@ -1083,12 +1371,10 @@
         return;
       }
       
-      // Success!
       showMessage('forgotMessage', '✅ Password updated successfully! Redirecting to login...', 'success');
       
       setTimeout(() => {
         showLogin();
-        // Reset form
         document.getElementById('emailStep').classList.remove('hidden');
         document.getElementById('emailSentStep').classList.add('hidden');
         document.getElementById('newPasswordStep').classList.add('hidden');
@@ -1096,8 +1382,6 @@
         document.getElementById('newPassword').value = '';
         document.getElementById('confirmNewPassword').value = '';
         document.getElementById('forgotMessage').innerHTML = '';
-        
-        // Clear URL hash
         window.location.hash = '';
       }, 2000);
     }
@@ -1105,6 +1389,7 @@
     async function logout() {
       await supabase.auth.signOut();
       currentUser = null;
+      isGuestMode = false;
       currentConversationId = null;
       conversationHistory = [];
       document.getElementById('chatBox').innerHTML = '';
@@ -1135,12 +1420,9 @@
       document.getElementById('forgotPasswordPage').classList.remove('hidden');
       document.getElementById('appContainer').classList.add('hidden');
       
-      // Reset form to email step
       document.getElementById('emailStep').classList.remove('hidden');
       document.getElementById('emailSentStep').classList.add('hidden');
       document.getElementById('newPasswordStep').classList.add('hidden');
-      
-      // Clear messages
       document.getElementById('forgotMessage').innerHTML = '';
     }
 
@@ -1149,7 +1431,16 @@
       document.getElementById('signupPage').classList.add('hidden');
       document.getElementById('forgotPasswordPage').classList.add('hidden');
       document.getElementById('appContainer').classList.remove('hidden');
-      document.getElementById('userEmail').textContent = currentUser.email;
+      
+      if (isGuestMode) {
+        document.getElementById('guestProfile').classList.remove('hidden');
+        document.getElementById('userProfile').classList.add('hidden');
+        document.getElementById('conversationsList').innerHTML = '<p style="text-align:center; color:#999; padding:1rem;">Guest conversations are not saved</p>';
+      } else {
+        document.getElementById('guestProfile').classList.add('hidden');
+        document.getElementById('userProfile').classList.remove('hidden');
+        document.getElementById('userEmail').textContent = currentUser.email;
+      }
     }
 
     function showMessage(elementId, message, type) {
@@ -1160,12 +1451,22 @@
     function toggleSidebar() {
       document.querySelector('.sidebar').classList.toggle('open');
     }
+    
+    function toggleReadme() {
+      const content = document.getElementById('readmeContent');
+      const icon = document.getElementById('readmeIcon');
+      
+      content.classList.toggle('show');
+      icon.classList.toggle('expanded');
+    }
 
     // ============================================
     // CONVERSATION MANAGEMENT
     // ============================================
     
     async function loadConversations() {
+      if (isGuestMode) return;
+      
       const { data, error } = await supabase
         .from('conversations')
         .select('*')
@@ -1204,6 +1505,13 @@
     }
 
     async function startNewConversation() {
+      if (isGuestMode) {
+        conversationHistory = [];
+        document.getElementById('chatBox').innerHTML = '';
+        showWelcomeMessage();
+        return;
+      }
+      
       const { data, error } = await supabase
         .from('conversations')
         .insert([{
@@ -1301,6 +1609,8 @@
     }
 
     async function saveMessage(role, content) {
+      if (isGuestMode) return;
+      
       if (!currentConversationId) {
         await startNewConversation();
         await new Promise(resolve => setTimeout(resolve, 500));
@@ -1346,7 +1656,6 @@
     const sendBtn = document.getElementById('sendBtn');
     const micBtn = document.getElementById('micBtn');
 
-    // Initialize Speech Recognition
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognition = new SpeechRecognition();
@@ -1410,7 +1719,12 @@
       const message = userInput.value.trim();
       if (!message) return;
 
-      if (!currentConversationId) {
+      // Check trial limit for guest users
+      if (!checkTrialLimit()) {
+        return;
+      }
+
+      if (!isGuestMode && !currentConversationId) {
         await startNewConversation();
       }
 
@@ -1427,7 +1741,13 @@
       }, 100);
       
       conversationHistory.push({ role: "user", content: message });
-      await saveMessage("user", message);
+      
+      if (!isGuestMode) {
+        await saveMessage("user", message);
+      }
+      
+      // Increment guest counter after user message
+      incrementGuestCount();
       
       userInput.value = "";
       showTypingIndicator();
@@ -1455,7 +1775,10 @@
 
         const aiReply = data.reply || "I apologize, but I couldn't generate a response. Please try again.";
         conversationHistory.push({ role: "assistant", content: aiReply });
-        await saveMessage("assistant", aiReply);
+        
+        if (!isGuestMode) {
+          await saveMessage("assistant", aiReply);
+        }
 
         const aiBubble = document.createElement("div");
         aiBubble.className = "bubble ai";
@@ -1528,6 +1851,9 @@
     window.closeModal = closeModal;
     window.sendPasswordResetEmail = sendPasswordResetEmail;
     window.updatePassword = updatePassword;
+    window.startGuestMode = startGuestMode;
+    window.closeTrialModal = closeTrialModal;
+    window.toggleReadme = toggleReadme;
     
     // ============================================
     // INITIALIZATION
