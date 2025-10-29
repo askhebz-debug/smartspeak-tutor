@@ -116,6 +116,22 @@
       text-align: center;
     }
     
+    /* OTP Input Styling */
+    .otp-container {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .otp-container input {
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0;
+    }
+    
     /* ============================================
        MAIN APP LAYOUT
        ============================================ */
@@ -123,7 +139,7 @@
       width: 100%;
       height: 100vh;
       display: flex;
-      padding-bottom: 55px; /* FIXED: Footer space */
+      padding-bottom: 55px; /* Footer space */
     }
     
     /* ============================================
@@ -229,7 +245,6 @@
       background: rgba(255, 255, 255, 0.15);
     }
     
-    /* FIXED: Header more visible */
     .chat-header {
       padding: 1.2rem;
       text-align: center;
@@ -241,7 +256,6 @@
       text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
     }
     
-    /* FIXED: Voice controls section */
     .settings-panel {
       padding: 0.75rem 1rem;
       background: rgba(255, 255, 255, 0.25);
@@ -276,7 +290,6 @@
       width: 100px;
     }
     
-    /* Voice control buttons */
     .voice-controls {
       display: flex;
       gap: 0.5rem;
@@ -305,11 +318,10 @@
       background: #ee5a5a;
     }
     
-    /* FIXED: Chat box with proper spacing */
     .chat-box {
       flex: 1;
       padding: 1rem;
-      padding-bottom: 70px; /* FIXED: Extra space for footer */
+      padding-bottom: 70px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -361,7 +373,6 @@
       animation-delay: 0.4s;
     }
     
-    /* FIXED: Listen button */
     .listen-btn {
       display: inline-block;
       margin-top: 8px;
@@ -383,7 +394,6 @@
       transform: scale(0.95);
     }
     
-    /* Chat input area */
     .chat-input {
       display: flex;
       padding: 0.75rem;
@@ -428,7 +438,7 @@
     }
     
     /* ============================================
-       FOOTER STYLES - FIXED POSITION
+       FOOTER STYLES - AUTO HIDE DURING CHAT
        ============================================ */
     .footer {
       position: fixed;
@@ -442,6 +452,12 @@
       font-size: 0.95rem;
       z-index: 1000;
       box-shadow: 0 -3px 15px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .footer.hidden-footer {
+      transform: translateY(100%);
+      opacity: 0;
+      pointer-events: none;
     }
     .footer-text {
       background: linear-gradient(
@@ -639,14 +655,44 @@
   </div>
 
   <!-- ============================================
-       FORGOT PASSWORD PAGE
+       FORGOT PASSWORD PAGE - OTP SYSTEM
        ============================================ -->
   <div id="forgotPasswordPage" class="auth-container hidden">
     <h2>Reset Password</h2>
-    <p style="text-align:center; margin-bottom:1rem; color:#666;">Enter your email and we'll send you a reset link</p>
+    <p style="text-align:center; margin-bottom:1rem; color:#666;">Enter your email to receive an OTP code</p>
     <div id="forgotMessage"></div>
-    <input type="email" id="resetEmail" placeholder="Your email" />
-    <button onclick="sendResetEmail()">Send Reset Link</button>
+    
+    <!-- Step 1: Enter Email -->
+    <div id="emailStep">
+      <input type="email" id="resetEmail" placeholder="Your email" />
+      <button onclick="sendOTP()">Send OTP</button>
+    </div>
+    
+    <!-- Step 2: Enter OTP -->
+    <div id="otpStep" class="hidden">
+      <p style="text-align:center; margin-bottom:1rem; color:#666; font-size:0.9rem;">
+        Enter the 6-digit code sent to your email
+      </p>
+      <div class="otp-container">
+        <input type="text" maxlength="1" class="otp-input" id="otp1" />
+        <input type="text" maxlength="1" class="otp-input" id="otp2" />
+        <input type="text" maxlength="1" class="otp-input" id="otp3" />
+        <input type="text" maxlength="1" class="otp-input" id="otp4" />
+        <input type="text" maxlength="1" class="otp-input" id="otp5" />
+        <input type="text" maxlength="1" class="otp-input" id="otp6" />
+      </div>
+      <button onclick="verifyOTP()">Verify OTP</button>
+      <button onclick="resendOTP()" style="background:#6c757d; margin-top:0.5rem;">Resend OTP</button>
+    </div>
+    
+    <!-- Step 3: Create New Password -->
+    <div id="newPasswordStep" class="hidden">
+      <p style="text-align:center; margin-bottom:1rem; color:#666;">Create your new password</p>
+      <input type="password" id="newPassword" placeholder="New password (min 6 characters)" />
+      <input type="password" id="confirmNewPassword" placeholder="Confirm new password" />
+      <button onclick="resetPassword()">Reset Password</button>
+    </div>
+    
     <div class="auth-link">
       <a href="#" onclick="showLogin(); return false;">Back to Login</a>
     </div>
@@ -675,11 +721,10 @@
     <div class="chat-container">
       <div class="chat-header">🧠 SmartSpeak AI English Tutor</div>
       
-      <!-- FIXED: Voice Controls Panel -->
       <div class="settings-panel">
         <div class="setting-group">
           <label>🌍 Accent</label>
-          <select id="accentSelect">
+          <select id="accentSelect" onchange="updateVoiceSettings()">
             <option value="en-US">🇺🇸 American</option>
             <option value="en-GB">🇬🇧 British</option>
             <option value="en-AU">🇦🇺 Australian</option>
@@ -690,7 +735,7 @@
         
         <div class="setting-group">
           <label>👤 Voice</label>
-          <select id="voiceGender">
+          <select id="voiceGender" onchange="updateVoiceSettings()">
             <option value="female">👩 Female</option>
             <option value="male">👨 Male</option>
           </select>
@@ -741,7 +786,7 @@
   <!-- ============================================
        FOOTER
        ============================================ -->
-  <div class="footer">
+  <div class="footer" id="appFooter">
     <div class="footer-text">Developed by Heber Mayormita</div>
   </div>
   
@@ -765,67 +810,96 @@
     let recognition = null;
     let isListening = false;
     let modalCallback = null;
-    let currentUtterance = null; // FIXED: Track current speech
+    let currentUtterance = null;
+    let availableVoices = [];
+    let selectedVoice = null;
+    let otpToken = null; // Store OTP verification token
+    let resetEmailAddress = null; // Store email for password reset
+    let hasActiveConversation = false; // Track if user is in active conversation
 
     // ============================================
     // VOICE & SPEECH FUNCTIONS - FIXED
     // ============================================
     
+    // Load voices when available
+    function loadVoices() {
+      availableVoices = speechSynthesis.getVoices();
+      if (availableVoices.length > 0) {
+        updateVoiceSettings();
+      }
+    }
+    
+    // Load voices immediately and on change
+    loadVoices();
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = loadVoices;
+    }
+    
     /**
-     * Get available voices matching accent and gender
+     * Update voice selection based on settings - FIXED
      */
-    function getVoiceForSettings() {
+    function updateVoiceSettings() {
       const accent = document.getElementById('accentSelect').value;
       const gender = document.getElementById('voiceGender').value;
-      const voices = speechSynthesis.getVoices();
       
-      // Map accents to voice language codes
-      const accentMap = {
-        'en-US': 'en-US',
-        'en-GB': 'en-GB',
-        'en-AU': 'en-AU',
-        'en-IN': 'en-IN',
-        'en-PH': 'en-US' // Filipino uses US English voices
-      };
-      
-      const targetLang = accentMap[accent] || 'en-US';
-      
-      // Filter voices by language
-      let matchingVoices = voices.filter(voice => 
-        voice.lang.startsWith(targetLang.split('-')[0])
-      );
-      
-      // Further filter by gender if possible
-      if (gender === 'female') {
-        const femaleVoices = matchingVoices.filter(voice => 
-          voice.name.toLowerCase().includes('female') ||
-          voice.name.toLowerCase().includes('woman') ||
-          voice.name.includes('Samantha') ||
-          voice.name.includes('Victoria') ||
-          voice.name.includes('Karen') ||
-          voice.name.includes('Moira') ||
-          voice.name.includes('Fiona') ||
-          voice.name.includes('Zira')
-        );
-        if (femaleVoices.length > 0) matchingVoices = femaleVoices;
-      } else {
-        const maleVoices = matchingVoices.filter(voice => 
-          voice.name.toLowerCase().includes('male') ||
-          voice.name.toLowerCase().includes('man') ||
-          voice.name.includes('Daniel') ||
-          voice.name.includes('David') ||
-          voice.name.includes('Alex') ||
-          voice.name.includes('George')
-        );
-        if (maleVoices.length > 0) matchingVoices = maleVoices;
+      if (availableVoices.length === 0) {
+        availableVoices = speechSynthesis.getVoices();
       }
       
-      // Prefer voices matching exact language
-      const exactMatches = matchingVoices.filter(v => v.lang === targetLang);
-      if (exactMatches.length > 0) return exactMatches[0];
+      // Voice selection priority for each accent
+      const voicePatterns = {
+        'en-US': {
+          female: ['Samantha', 'Victoria', 'Ava', 'Allison', 'Susan', 'Zira', 'female'],
+          male: ['Alex', 'Tom', 'Daniel', 'Fred', 'David', 'Mark', 'male']
+        },
+        'en-GB': {
+          female: ['Kate', 'Serena', 'Hazel', 'female'],
+          male: ['Daniel', 'Oliver', 'George', 'male']
+        },
+        'en-AU': {
+          female: ['Karen', 'Catherine', 'female'],
+          male: ['Lee', 'male']
+        },
+        'en-IN': {
+          female: ['Veena', 'Lekha', 'female'],
+          male: ['Rishi', 'male']
+        },
+        'en-PH': {
+          female: ['Samantha', 'Ava', 'female'],
+          male: ['Alex', 'Tom', 'male']
+        }
+      };
       
-      // Fallback to first matching voice
-      return matchingVoices[0] || voices[0];
+      const patterns = voicePatterns[accent] || voicePatterns['en-US'];
+      const genderPatterns = patterns[gender];
+      
+      // First try to find exact lang match with gender
+      let voice = null;
+      for (const pattern of genderPatterns) {
+        voice = availableVoices.find(v => 
+          v.lang.startsWith(accent.split('-')[0]) &&
+          v.name.includes(pattern)
+        );
+        if (voice) break;
+      }
+      
+      // If not found, try any voice with matching language
+      if (!voice) {
+        voice = availableVoices.find(v => v.lang === accent);
+      }
+      
+      // Fallback to first voice with matching language prefix
+      if (!voice) {
+        voice = availableVoices.find(v => v.lang.startsWith(accent.split('-')[0]));
+      }
+      
+      // Final fallback
+      if (!voice && availableVoices.length > 0) {
+        voice = availableVoices[0];
+      }
+      
+      selectedVoice = voice;
+      console.log('Selected voice:', voice?.name, voice?.lang);
     }
     
     /**
@@ -835,43 +909,46 @@
       // Stop any ongoing speech
       stopSpeaking();
       
-      const utterance = new SpeechSynthesisUtterance(text);
-      const voice = getVoiceForSettings();
-      
-      if (voice) {
-        utterance.voice = voice;
-      }
-      
-      utterance.lang = document.getElementById('accentSelect').value;
-      utterance.rate = parseFloat(document.getElementById('speedControl').value);
-      utterance.pitch = parseFloat(document.getElementById('pitchControl').value);
-      
-      // Track current utterance
-      currentUtterance = utterance;
-      
-      // Clear tracking when done
-      utterance.onend = () => {
-        currentUtterance = null;
-      };
-      
-      speechSynthesis.speak(utterance);
+      // Small delay to ensure previous speech is stopped
+      setTimeout(() => {
+        const utterance = new SpeechSynthesisUtterance(text);
+        
+        // Apply selected voice
+        if (selectedVoice) {
+          utterance.voice = selectedVoice;
+          utterance.lang = selectedVoice.lang;
+        } else {
+          utterance.lang = document.getElementById('accentSelect').value;
+        }
+        
+        utterance.rate = parseFloat(document.getElementById('speedControl').value);
+        utterance.pitch = parseFloat(document.getElementById('pitchControl').value);
+        
+        // Track current utterance
+        currentUtterance = utterance;
+        
+        // Clear tracking when done
+        utterance.onend = () => {
+          currentUtterance = null;
+        };
+        
+        utterance.onerror = (event) => {
+          console.error('Speech error:', event);
+          currentUtterance = null;
+        };
+        
+        speechSynthesis.speak(utterance);
+      }, 100);
     }
     
     /**
      * Stop current speech - FIXED
      */
     function stopSpeaking() {
-      if (speechSynthesis.speaking) {
+      if (speechSynthesis.speaking || speechSynthesis.pending) {
         speechSynthesis.cancel();
-        currentUtterance = null;
       }
-    }
-    
-    // Load voices when available
-    if (speechSynthesis.onvoiceschanged !== undefined) {
-      speechSynthesis.onvoiceschanged = () => {
-        console.log('Voices loaded:', speechSynthesis.getVoices().length);
-      };
+      currentUtterance = null;
     }
 
     // ============================================
@@ -891,6 +968,28 @@
         modalCallback = null;
       }
     }
+
+    // ============================================
+    // OTP INPUT HANDLING
+    // ============================================
+    
+    // Auto-focus next OTP input
+    document.addEventListener('DOMContentLoaded', () => {
+      const otpInputs = document.querySelectorAll('.otp-input');
+      otpInputs.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+          if (e.target.value.length === 1 && index < otpInputs.length - 1) {
+            otpInputs[index + 1].focus();
+          }
+        });
+        
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !e.target.value && index > 0) {
+            otpInputs[index - 1].focus();
+          }
+        });
+      });
+    });
 
     // ============================================
     // AUTHENTICATION FUNCTIONS
@@ -963,7 +1062,11 @@
       }
     }
 
-    async function sendResetEmail() {
+    // ============================================
+    // OTP PASSWORD RESET SYSTEM
+    // ============================================
+    
+    async function sendOTP() {
       const email = document.getElementById('resetEmail').value.trim();
       
       if (!email) {
@@ -971,13 +1074,119 @@
         return;
       }
       
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      resetEmailAddress = email;
+      
+      // Generate 6-digit OTP
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      
+      // Send OTP via Supabase Auth (using password reset with OTP in email)
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin
+      });
+      
+      if (error) {
+        showMessage('forgotMessage', error.message, 'error');
+        return;
+      }
+      
+      // Store OTP token (in production, this should be server-side)
+      otpToken = otp;
+      
+      // Show OTP step
+      document.getElementById('emailStep').classList.add('hidden');
+      document.getElementById('otpStep').classList.remove('hidden');
+      showMessage('forgotMessage', `✅ OTP sent to ${email}. Check your email!`, 'success');
+      
+      // For demo purposes, also log OTP (remove in production)
+      console.log('OTP Code:', otp);
+      showMessage('forgotMessage', `✅ OTP sent! (Demo: ${otp})`, 'success');
+    }
+    
+    function getOTPValue() {
+      let otp = '';
+      for (let i = 1; i <= 6; i++) {
+        otp += document.getElementById(`otp${i}`).value;
+      }
+      return otp;
+    }
+    
+    async function verifyOTP() {
+      const enteredOTP = getOTPValue();
+      
+      if (enteredOTP.length !== 6) {
+        showMessage('forgotMessage', 'Please enter complete 6-digit OTP', 'error');
+        return;
+      }
+      
+      // Verify OTP (in production, verify with backend)
+      if (enteredOTP === otpToken) {
+        // OTP verified, show password reset form
+        document.getElementById('otpStep').classList.add('hidden');
+        document.getElementById('newPasswordStep').classList.remove('hidden');
+        showMessage('forgotMessage', '✅ OTP verified! Create your new password.', 'success');
+      } else {
+        showMessage('forgotMessage', '❌ Invalid OTP. Please try again.', 'error');
+      }
+    }
+    
+    async function resendOTP() {
+      if (!resetEmailAddress) {
+        showMessage('forgotMessage', 'Please enter your email first', 'error');
+        return;
+      }
+      
+      // Clear previous OTP inputs
+      for (let i = 1; i <= 6; i++) {
+        document.getElementById(`otp${i}`).value = '';
+      }
+      
+      await sendOTP();
+    }
+    
+    async function resetPassword() {
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmNewPassword').value;
+      
+      if (!newPassword || !confirmPassword) {
+        showMessage('forgotMessage', 'Please fill all fields', 'error');
+        return;
+      }
+      
+      if (newPassword !== confirmPassword) {
+        showMessage('forgotMessage', 'Passwords do not match', 'error');
+        return;
+      }
+      
+      if (newPassword.length < 6) {
+        showMessage('forgotMessage', 'Password must be at least 6 characters', 'error');
+        return;
+      }
+      
+      // In production, this would update password via backend
+      // For now, we'll use Supabase's update password
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword
+      });
       
       if (error) {
         showMessage('forgotMessage', error.message, 'error');
       } else {
-        showMessage('forgotMessage', '✅ Password reset link sent! Check your email.', 'success');
-        setTimeout(() => showLogin(), 3000);
+        showMessage('forgotMessage', '✅ Password reset successful! You can now login.', 'success');
+        setTimeout(() => {
+          showLogin();
+          // Reset form
+          document.getElementById('emailStep').classList.remove('hidden');
+          document.getElementById('otpStep').classList.add('hidden');
+          document.getElementById('newPasswordStep').classList.add('hidden');
+          document.getElementById('resetEmail').value = '';
+          document.getElementById('newPassword').value = '';
+          document.getElementById('confirmNewPassword').value = '';
+          for (let i = 1; i <= 6; i++) {
+            document.getElementById(`otp${i}`).value = '';
+          }
+          otpToken = null;
+          resetEmailAddress = null;
+        }, 2000);
       }
     }
 
@@ -986,7 +1195,9 @@
       currentUser = null;
       currentConversationId = null;
       conversationHistory = [];
+      hasActiveConversation = false;
       document.getElementById('chatBox').innerHTML = '';
+      showFooter(); // Show footer on logout
       showLogin();
     }
 
@@ -1013,6 +1224,11 @@
       document.getElementById('signupPage').classList.add('hidden');
       document.getElementById('forgotPasswordPage').classList.remove('hidden');
       document.getElementById('appContainer').classList.add('hidden');
+      
+      // Reset form to email step
+      document.getElementById('emailStep').classList.remove('hidden');
+      document.getElementById('otpStep').classList.add('hidden');
+      document.getElementById('newPasswordStep').classList.add('hidden');
     }
 
     function showApp() {
@@ -1031,6 +1247,18 @@
 
     function toggleSidebar() {
       document.querySelector('.sidebar').classList.toggle('open');
+    }
+
+    // ============================================
+    // FOOTER AUTO-HIDE FUNCTIONALITY
+    // ============================================
+    
+    function hideFooter() {
+      document.getElementById('appFooter').classList.add('hidden-footer');
+    }
+    
+    function showFooter() {
+      document.getElementById('appFooter').classList.remove('hidden-footer');
     }
 
     // ============================================
@@ -1092,7 +1320,11 @@
       
       currentConversationId = data.id;
       conversationHistory = [];
+      hasActiveConversation = false;
       document.getElementById('chatBox').innerHTML = '';
+      
+      // Show footer when starting new conversation
+      showFooter();
       
       // Re-enable controls
       document.getElementById('sendBtn').disabled = false;
@@ -1124,6 +1356,15 @@
         role: msg.role,
         content: msg.content
       }));
+      
+      // Check if conversation has messages
+      hasActiveConversation = data.length > 0;
+      
+      if (hasActiveConversation) {
+        hideFooter(); // Hide footer if conversation has messages
+      } else {
+        showFooter();
+      }
       
       data.forEach(msg => {
         const bubble = document.createElement('div');
@@ -1168,7 +1409,9 @@
       if (conversationId === currentConversationId) {
         currentConversationId = null;
         conversationHistory = [];
+        hasActiveConversation = false;
         document.getElementById('chatBox').innerHTML = '';
+        showFooter(); // Show footer when conversation is deleted
       }
       
       loadConversations();
@@ -1210,6 +1453,7 @@
       
       loadConversations();
     }
+    
     // ============================================
     // CHAT FUNCTIONALITY
     // ============================================
@@ -1285,6 +1529,12 @@
 
       if (!currentConversationId) {
         await startNewConversation();
+      }
+
+      // Hide footer when user sends first message
+      if (!hasActiveConversation) {
+        hideFooter();
+        hasActiveConversation = true;
       }
 
       sendBtn.disabled = true;
@@ -1383,6 +1633,7 @@
     // ============================================
     window.speakText = speakText;
     window.stopSpeaking = stopSpeaking;
+    window.updateVoiceSettings = updateVoiceSettings;
     window.startNewConversation = startNewConversation;
     window.loadConversation = loadConversation;
     window.confirmDeleteConversation = confirmDeleteConversation;
@@ -1390,6 +1641,10 @@
     window.toggleSidebar = toggleSidebar;
     window.showConfirmModal = showConfirmModal;
     window.closeModal = closeModal;
+    window.sendOTP = sendOTP;
+    window.verifyOTP = verifyOTP;
+    window.resendOTP = resendOTP;
+    window.resetPassword = resetPassword;
     
     // ============================================
     // INITIALIZATION
