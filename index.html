@@ -326,6 +326,11 @@
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
+      scroll-behavior: smooth;
+    }
+    /* Mobile: Extra padding when footer is hidden */
+    .chat-box.active-chat {
+      padding-bottom: 20px;
     }
     .bubble {
       padding: 0.75rem 1rem;
@@ -459,6 +464,16 @@
       opacity: 0;
       pointer-events: none;
     }
+    
+    /* Mobile: Completely remove footer from layout when hidden */
+    @media (max-width: 768px) {
+      .footer.hidden-footer {
+        display: none;
+      }
+      .app-container.chat-active {
+        padding-bottom: 0;
+      }
+    }
     .footer-text {
       background: linear-gradient(
         90deg,
@@ -577,6 +592,10 @@
       }
       .app-container {
         flex-direction: column;
+        padding-bottom: 60px; /* Default with footer */
+      }
+      .app-container.chat-active {
+        padding-bottom: 0; /* No footer during chat */
       }
       .chat-header {
         font-size: 1.1rem;
@@ -592,6 +611,12 @@
       .footer {
         font-size: 0.75rem;
         padding: 10px;
+      }
+      .chat-box {
+        padding-bottom: 20px; /* Reduced padding on mobile */
+      }
+      .chat-box.active-chat {
+        padding-bottom: 10px; /* Even less when chatting */
       }
     }
     .menu-toggle {
@@ -1255,10 +1280,14 @@
     
     function hideFooter() {
       document.getElementById('appFooter').classList.add('hidden-footer');
+      document.getElementById('appContainer').classList.add('chat-active');
+      document.getElementById('chatBox').classList.add('active-chat');
     }
     
     function showFooter() {
       document.getElementById('appFooter').classList.remove('hidden-footer');
+      document.getElementById('appContainer').classList.remove('chat-active');
+      document.getElementById('chatBox').classList.remove('active-chat');
     }
 
     // ============================================
@@ -1544,7 +1573,11 @@
       userBubble.className = 'bubble user';
       userBubble.textContent = message;
       chatBox.appendChild(userBubble);
-      chatBox.scrollTop = chatBox.scrollHeight;
+      
+      // Smooth scroll to bottom
+      setTimeout(() => {
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 100);
       
       conversationHistory.push({ role: "user", content: message });
       await saveMessage("user", message);
@@ -1585,7 +1618,11 @@
           <button class="listen-btn" onclick="speakText(\`${escapedReply}\`)">🎧 Listen</button>
         `;
         chatBox.appendChild(aiBubble);
-        chatBox.scrollTop = chatBox.scrollHeight;
+        
+        // Smooth scroll to bottom after AI reply
+        setTimeout(() => {
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }, 100);
         
         // Auto-play response
         speakText(aiReply);
@@ -1600,7 +1637,11 @@
           ❌ Sorry, I'm having trouble connecting. Please check your internet and try again.
         `;
         chatBox.appendChild(errorBubble);
-        chatBox.scrollTop = chatBox.scrollHeight;
+        
+        // Scroll to error message
+        setTimeout(() => {
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }, 100);
       } finally {
         sendBtn.disabled = false;
         userInput.disabled = false;
