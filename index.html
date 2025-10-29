@@ -145,21 +145,15 @@
       margin-bottom: 1rem;
       text-align: center;
     }
-    
-    /* OTP Input Styling */
-    .otp-container {
-      display: flex;
-      gap: 0.5rem;
-      justify-content: center;
+    .info-message {
+      background: #d1ecf1;
+      color: #0c5460;
+      padding: 0.8rem;
+      border-radius: 10px;
       margin-bottom: 1rem;
-    }
-    .otp-container input {
-      width: 50px;
-      height: 50px;
       text-align: center;
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 0;
+      font-size: 0.9rem;
+      line-height: 1.5;
     }
     
     /* ============================================
@@ -647,48 +641,38 @@
   </div>
 
   <!-- ============================================
-       FORGOT PASSWORD PAGE - OTP SYSTEM
+       FORGOT PASSWORD PAGE - SUPABASE INTEGRATED
        ============================================ -->
   <div id="forgotPasswordPage" class="auth-container hidden">
-    <h2>Reset Password</h2>
+    <h2>🔐 Reset Password</h2>
     <div id="forgotMessage"></div>
     
-    <!-- Step 1: Enter Email -->
+    <!-- Step 1: Enter Email to Receive Reset Link -->
     <div id="emailStep">
-      <p style="text-align:center; margin-bottom:1rem; color:#666;">Enter your email to receive an OTP code</p>
+      <div class="info-message">
+        📧 Enter your email address and we'll send you a password reset link.
+      </div>
       <input type="email" id="resetEmail" placeholder="Your email" />
-      <button onclick="sendOTP()">Send OTP</button>
+      <button onclick="sendPasswordResetEmail()">Send Reset Link</button>
     </div>
     
-    <!-- Step 2: Enter OTP -->
-    <div id="otpStep" class="hidden">
-      <p style="text-align:center; margin-bottom:1rem; color:#666; font-size:0.9rem;">
-        Enter the 6-digit code sent to your email
-      </p>
-      
-      <!-- OTP Display -->
-      <div id="otpDisplay" style="text-align:center; margin-bottom:1rem; padding:0.8rem; background:#e3f2fd; border-radius:10px; font-size:1.2rem; font-weight:700; color:#1976d2; letter-spacing:3px;">
-        OTP: ------
+    <!-- Step 2: Instructions after sending email -->
+    <div id="emailSentStep" class="hidden">
+      <div class="success-message">
+        ✅ Password reset email sent!<br><br>
+        Check your inbox and click the reset link. You'll be redirected back here to create a new password.
       </div>
-      
-      <div class="otp-container">
-        <input type="text" maxlength="1" class="otp-input" id="otp1" />
-        <input type="text" maxlength="1" class="otp-input" id="otp2" />
-        <input type="text" maxlength="1" class="otp-input" id="otp3" />
-        <input type="text" maxlength="1" class="otp-input" id="otp4" />
-        <input type="text" maxlength="1" class="otp-input" id="otp5" />
-        <input type="text" maxlength="1" class="otp-input" id="otp6" />
-      </div>
-      <button onclick="verifyOTP()">Verify OTP</button>
-      <button onclick="resendOTP()" style="background:#6c757d; margin-top:0.5rem;">Resend OTP</button>
+      <button onclick="showLogin()" style="margin-top: 1rem;">Back to Login</button>
     </div>
     
-    <!-- Step 3: Create New Password -->
+    <!-- Step 3: Create New Password (shown after clicking email link) -->
     <div id="newPasswordStep" class="hidden">
-      <p style="text-align:center; margin-bottom:1rem; color:#666;">Create your new password</p>
+      <div class="info-message">
+        🔑 Create your new password
+      </div>
       <input type="password" id="newPassword" placeholder="New password (min 6 characters)" />
       <input type="password" id="confirmNewPassword" placeholder="Confirm new password" />
-      <button onclick="resetPassword()">Reset Password</button>
+      <button onclick="updatePassword()">Update Password</button>
     </div>
     
     <div class="auth-link">
@@ -807,11 +791,9 @@
     let currentUtterance = null;
     let availableVoices = [];
     let selectedVoice = null;
-    let otpToken = null; // Store OTP verification token
-    let resetEmailAddress = null; // Store email for password reset
 
     // ============================================
-    // VOICE & SPEECH FUNCTIONS - FIXED
+    // VOICE & SPEECH FUNCTIONS
     // ============================================
     
     // Load voices when available
@@ -828,9 +810,6 @@
       speechSynthesis.onvoiceschanged = loadVoices;
     }
     
-    /**
-     * Update voice selection based on settings - FIXED
-     */
     function updateVoiceSettings() {
       const accent = document.getElementById('accentSelect').value;
       const gender = document.getElementById('voiceGender').value;
@@ -839,7 +818,6 @@
         availableVoices = speechSynthesis.getVoices();
       }
       
-      // Voice selection priority for each accent
       const voicePatterns = {
         'en-US': {
           female: ['Samantha', 'Victoria', 'Ava', 'Allison', 'Susan', 'Zira', 'female'],
@@ -866,7 +844,6 @@
       const patterns = voicePatterns[accent] || voicePatterns['en-US'];
       const genderPatterns = patterns[gender];
       
-      // First try to find exact lang match with gender
       let voice = null;
       for (const pattern of genderPatterns) {
         voice = availableVoices.find(v => 
@@ -876,17 +853,14 @@
         if (voice) break;
       }
       
-      // If not found, try any voice with matching language
       if (!voice) {
         voice = availableVoices.find(v => v.lang === accent);
       }
       
-      // Fallback to first voice with matching language prefix
       if (!voice) {
         voice = availableVoices.find(v => v.lang.startsWith(accent.split('-')[0]));
       }
       
-      // Final fallback
       if (!voice && availableVoices.length > 0) {
         voice = availableVoices[0];
       }
@@ -895,18 +869,12 @@
       console.log('Selected voice:', voice?.name, voice?.lang);
     }
     
-    /**
-     * Speak text with current settings - FIXED
-     */
     function speakText(text) {
-      // Stop any ongoing speech
       stopSpeaking();
       
-      // Small delay to ensure previous speech is stopped
       setTimeout(() => {
         const utterance = new SpeechSynthesisUtterance(text);
         
-        // Apply selected voice
         if (selectedVoice) {
           utterance.voice = selectedVoice;
           utterance.lang = selectedVoice.lang;
@@ -917,10 +885,8 @@
         utterance.rate = parseFloat(document.getElementById('speedControl').value);
         utterance.pitch = parseFloat(document.getElementById('pitchControl').value);
         
-        // Track current utterance
         currentUtterance = utterance;
         
-        // Clear tracking when done
         utterance.onend = () => {
           currentUtterance = null;
         };
@@ -934,9 +900,6 @@
       }, 100);
     }
     
-    /**
-     * Stop current speech - FIXED
-     */
     function stopSpeaking() {
       if (speechSynthesis.speaking || speechSynthesis.pending) {
         speechSynthesis.cancel();
@@ -963,33 +926,26 @@
     }
 
     // ============================================
-    // OTP INPUT HANDLING
-    // ============================================
-    
-    // Auto-focus next OTP input
-    document.addEventListener('DOMContentLoaded', () => {
-      const otpInputs = document.querySelectorAll('.otp-input');
-      otpInputs.forEach((input, index) => {
-        input.addEventListener('input', (e) => {
-          if (e.target.value.length === 1 && index < otpInputs.length - 1) {
-            otpInputs[index + 1].focus();
-          }
-        });
-        
-        input.addEventListener('keydown', (e) => {
-          if (e.key === 'Backspace' && !e.target.value && index > 0) {
-            otpInputs[index - 1].focus();
-          }
-        });
-      });
-    });
-
-    // ============================================
     // AUTHENTICATION FUNCTIONS
     // ============================================
     
     async function checkAuth() {
       const { data: { user } } = await supabase.auth.getUser();
+      
+      // Check if this is a password recovery callback
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      const type = hashParams.get('type');
+      
+      if (type === 'recovery') {
+        // User clicked password reset link in email
+        showForgotPassword();
+        document.getElementById('emailStep').classList.add('hidden');
+        document.getElementById('emailSentStep').classList.add('hidden');
+        document.getElementById('newPasswordStep').classList.remove('hidden');
+        showMessage('forgotMessage', '🔑 Please create your new password', 'info');
+        return;
+      }
+      
       if (user) {
         currentUser = user;
         showApp();
@@ -1056,10 +1012,13 @@
     }
 
     // ============================================
-    // OTP PASSWORD RESET SYSTEM
+    // PASSWORD RESET - SUPABASE INTEGRATED
     // ============================================
     
-    async function sendOTP() {
+    /**
+     * Send password reset email using Supabase
+     */
+    async function sendPasswordResetEmail() {
       const email = document.getElementById('resetEmail').value.trim();
       
       if (!email) {
@@ -1074,85 +1033,28 @@
         return;
       }
       
-      resetEmailAddress = email;
+      // Get the current URL origin for redirect
+      const redirectUrl = window.location.origin + window.location.pathname;
       
-      // Generate 6-digit OTP
-      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: redirectUrl,
+      });
       
-      // Store OTP token
-      otpToken = otp;
+      if (error) {
+        showMessage('forgotMessage', '❌ ' + error.message, 'error');
+        return;
+      }
       
-      // Show OTP step
+      // Show success step
       document.getElementById('emailStep').classList.add('hidden');
-      document.getElementById('otpStep').classList.remove('hidden');
-      
-      // Display success message
-      showMessage('forgotMessage', `✅ OTP sent to ${email}!`, 'success');
-      
-      // Show OTP number persistently
-      const otpDisplay = document.getElementById('otpDisplay');
-      if (otpDisplay) {
-        otpDisplay.textContent = `OTP: ${otp}`;
-      }
-      
-      // Focus first OTP input
-      setTimeout(() => {
-        document.getElementById('otp1').focus();
-      }, 100);
+      document.getElementById('emailSentStep').classList.remove('hidden');
+      document.getElementById('forgotMessage').innerHTML = '';
     }
     
-    function getOTPValue() {
-      let otp = '';
-      for (let i = 1; i <= 6; i++) {
-        otp += document.getElementById(`otp${i}`).value;
-      }
-      return otp;
-    }
-    
-    async function verifyOTP() {
-      const enteredOTP = getOTPValue();
-      
-      if (enteredOTP.length !== 6) {
-        showMessage('forgotMessage', 'Please enter complete 6-digit OTP', 'error');
-        return;
-      }
-      
-      // Verify OTP (in production, verify with backend)
-      if (enteredOTP === otpToken) {
-        // OTP verified, show password reset form
-        document.getElementById('otpStep').classList.add('hidden');
-        document.getElementById('newPasswordStep').classList.remove('hidden');
-        showMessage('forgotMessage', '✅ OTP verified! Create your new password.', 'success');
-      } else {
-        showMessage('forgotMessage', '❌ Invalid OTP. Please try again.', 'error');
-      }
-    }
-    
-    async function resendOTP() {
-      if (!resetEmailAddress) {
-        showMessage('forgotMessage', 'Please enter your email first', 'error');
-        return;
-      }
-      
-      // Clear previous OTP inputs
-      for (let i = 1; i <= 6; i++) {
-        document.getElementById(`otp${i}`).value = '';
-      }
-      
-      // Generate new OTP
-      const otp = Math.floor(100000 + Math.random() * 900000).toString();
-      otpToken = otp;
-      
-      // Show new OTP
-      const otpDisplay = document.getElementById('otpDisplay');
-      if (otpDisplay) {
-        otpDisplay.textContent = `OTP: ${otp}`;
-      }
-      
-      showMessage('forgotMessage', '✅ New OTP sent!', 'success');
-    }
-    
-    async function resetPassword() {
+    /**
+     * Update password after user clicks email link
+     */
+    async function updatePassword() {
       const newPassword = document.getElementById('newPassword').value;
       const confirmPassword = document.getElementById('confirmNewPassword').value;
       
@@ -1171,33 +1073,32 @@
         return;
       }
       
-      // In a real production app, this would:
-      // 1. Send OTP + new password to backend
-      // 2. Backend verifies OTP
-      // 3. Backend updates password in database
+      // Update password in Supabase
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword
+      });
       
-      // For this demo, we'll show success and redirect to login
-      showMessage('forgotMessage', '✅ Password reset successful! You can now login with your new password.', 'success');
+      if (error) {
+        showMessage('forgotMessage', '❌ ' + error.message, 'error');
+        return;
+      }
+      
+      // Success!
+      showMessage('forgotMessage', '✅ Password updated successfully! Redirecting to login...', 'success');
       
       setTimeout(() => {
         showLogin();
         // Reset form
         document.getElementById('emailStep').classList.remove('hidden');
-        document.getElementById('otpStep').classList.add('hidden');
+        document.getElementById('emailSentStep').classList.add('hidden');
         document.getElementById('newPasswordStep').classList.add('hidden');
         document.getElementById('resetEmail').value = '';
         document.getElementById('newPassword').value = '';
         document.getElementById('confirmNewPassword').value = '';
-        for (let i = 1; i <= 6; i++) {
-          document.getElementById(`otp${i}`).value = '';
-        }
-        const otpDisplay = document.getElementById('otpDisplay');
-        if (otpDisplay) {
-          otpDisplay.textContent = 'OTP: ------';
-        }
-        otpToken = null;
-        resetEmailAddress = null;
         document.getElementById('forgotMessage').innerHTML = '';
+        
+        // Clear URL hash
+        window.location.hash = '';
       }, 2000);
     }
 
@@ -1236,14 +1137,8 @@
       
       // Reset form to email step
       document.getElementById('emailStep').classList.remove('hidden');
-      document.getElementById('otpStep').classList.add('hidden');
+      document.getElementById('emailSentStep').classList.add('hidden');
       document.getElementById('newPasswordStep').classList.add('hidden');
-      
-      // Reset OTP display
-      const otpDisplay = document.getElementById('otpDisplay');
-      if (otpDisplay) {
-        otpDisplay.textContent = 'OTP: ------';
-      }
       
       // Clear messages
       document.getElementById('forgotMessage').innerHTML = '';
@@ -1260,11 +1155,6 @@
     function showMessage(elementId, message, type) {
       const el = document.getElementById(elementId);
       el.innerHTML = `<div class="${type}-message">${message}</div>`;
-      
-      // Don't auto-clear for forgot password page (keep OTP visible)
-      if (elementId !== 'forgotMessage') {
-        setTimeout(() => el.innerHTML = '', 5000);
-      }
     }
 
     function toggleSidebar() {
@@ -1332,7 +1222,6 @@
       conversationHistory = [];
       document.getElementById('chatBox').innerHTML = '';
       
-      // Re-enable controls
       document.getElementById('sendBtn').disabled = false;
       document.getElementById('userInput').disabled = false;
       document.getElementById('userInput').focus();
@@ -1376,7 +1265,6 @@
       
       chatBox.scrollTop = chatBox.scrollHeight;
       
-      // Re-enable controls
       document.getElementById('sendBtn').disabled = false;
       document.getElementById('userInput').disabled = false;
       document.getElementById('userInput').focus();
@@ -1534,7 +1422,6 @@
       userBubble.textContent = message;
       chatBox.appendChild(userBubble);
       
-      // Smooth scroll to bottom
       setTimeout(() => {
         chatBox.scrollTop = chatBox.scrollHeight;
       }, 100);
@@ -1579,12 +1466,10 @@
         `;
         chatBox.appendChild(aiBubble);
         
-        // Smooth scroll to bottom after AI reply
         setTimeout(() => {
           chatBox.scrollTop = chatBox.scrollHeight;
         }, 100);
         
-        // Auto-play response
         speakText(aiReply);
 
       } catch (error) {
@@ -1598,7 +1483,6 @@
         `;
         chatBox.appendChild(errorBubble);
         
-        // Scroll to error message
         setTimeout(() => {
           chatBox.scrollTop = chatBox.scrollHeight;
         }, 100);
@@ -1642,10 +1526,8 @@
     window.toggleSidebar = toggleSidebar;
     window.showConfirmModal = showConfirmModal;
     window.closeModal = closeModal;
-    window.sendOTP = sendOTP;
-    window.verifyOTP = verifyOTP;
-    window.resendOTP = resendOTP;
-    window.resetPassword = resetPassword;
+    window.sendPasswordResetEmail = sendPasswordResetEmail;
+    window.updatePassword = updatePassword;
     
     // ============================================
     // INITIALIZATION
