@@ -665,6 +665,12 @@
       <p style="text-align:center; margin-bottom:1rem; color:#666; font-size:0.9rem;">
         Enter the 6-digit code sent to your email
       </p>
+      
+      <!-- OTP Display -->
+      <div id="otpDisplay" style="text-align:center; margin-bottom:1rem; padding:0.8rem; background:#e3f2fd; border-radius:10px; font-size:1.2rem; font-weight:700; color:#1976d2; letter-spacing:3px;">
+        OTP: ------
+      </div>
+      
       <div class="otp-container">
         <input type="text" maxlength="1" class="otp-input" id="otp1" />
         <input type="text" maxlength="1" class="otp-input" id="otp2" />
@@ -1082,11 +1088,15 @@
       // Show OTP step
       document.getElementById('emailStep').classList.add('hidden');
       document.getElementById('otpStep').classList.remove('hidden');
-      showMessage('forgotMessage', `✅ OTP sent to ${email}. Check your email!`, 'success');
       
-      // For demo purposes, also log OTP (remove in production)
-      console.log('OTP Code:', otp);
-      showMessage('forgotMessage', `✅ OTP sent! (Demo: ${otp})`, 'success');
+      // Display OTP persistently - no auto-clear
+      showMessage('forgotMessage', `✅ OTP sent to ${email}!`, 'success');
+      
+      // Show OTP number persistently
+      const otpDisplay = document.getElementById('otpDisplay');
+      if (otpDisplay) {
+        otpDisplay.textContent = `OTP: ${otp}`;
+      }
     }
     
     function getOTPValue() {
@@ -1127,7 +1137,17 @@
         document.getElementById(`otp${i}`).value = '';
       }
       
-      await sendOTP();
+      // Generate new OTP
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      otpToken = otp;
+      
+      // Show new OTP
+      const otpDisplay = document.getElementById('otpDisplay');
+      if (otpDisplay) {
+        otpDisplay.textContent = `OTP: ${otp}`;
+      }
+      
+      showMessage('forgotMessage', '✅ New OTP sent!', 'success');
     }
     
     async function resetPassword() {
@@ -1214,6 +1234,15 @@
       document.getElementById('emailStep').classList.remove('hidden');
       document.getElementById('otpStep').classList.add('hidden');
       document.getElementById('newPasswordStep').classList.add('hidden');
+      
+      // Reset OTP display
+      const otpDisplay = document.getElementById('otpDisplay');
+      if (otpDisplay) {
+        otpDisplay.textContent = 'OTP: ------';
+      }
+      
+      // Clear messages
+      document.getElementById('forgotMessage').innerHTML = '';
     }
 
     function showApp() {
@@ -1227,7 +1256,11 @@
     function showMessage(elementId, message, type) {
       const el = document.getElementById(elementId);
       el.innerHTML = `<div class="${type}-message">${message}</div>`;
-      setTimeout(() => el.innerHTML = '', 5000);
+      
+      // Don't auto-clear for forgot password page (keep OTP visible)
+      if (elementId !== 'forgotMessage') {
+        setTimeout(() => el.innerHTML = '', 5000);
+      }
     }
 
     function toggleSidebar() {
