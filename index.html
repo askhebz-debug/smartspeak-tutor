@@ -31,7 +31,9 @@
       overflow: hidden;
     }
     
-    /* Auth Pages Styles */
+    /* ============================================
+       AUTH PAGES STYLES
+       ============================================ */
     .auth-container {
       width: 95%;
       max-width: 400px;
@@ -114,13 +116,19 @@
       text-align: center;
     }
     
-    /* Chat Container Styles */
+    /* ============================================
+       MAIN APP LAYOUT
+       ============================================ */
     .app-container {
       width: 100%;
       height: 100vh;
       display: flex;
-      padding-bottom: 50px; /* Space for footer */
+      padding-bottom: 55px; /* FIXED: Footer space */
     }
+    
+    /* ============================================
+       SIDEBAR STYLES
+       ============================================ */
     .sidebar {
       width: 280px;
       background: rgba(255, 255, 255, 0.95);
@@ -210,7 +218,9 @@
       background: #4b8efc;
     }
     
-    /* Chat Area */
+    /* ============================================
+       CHAT AREA STYLES
+       ============================================ */
     .chat-container {
       flex: 1;
       display: flex;
@@ -218,20 +228,25 @@
       backdrop-filter: blur(15px);
       background: rgba(255, 255, 255, 0.15);
     }
+    
+    /* FIXED: Header more visible */
     .chat-header {
-      padding: 1rem;
+      padding: 1.2rem;
       text-align: center;
-      background: rgba(255, 255, 255, 0.25);
-      font-weight: 700;
+      background: rgba(255, 255, 255, 0.3);
+      font-weight: 800;
+      font-size: 1.4rem;
       color: #fff;
-      letter-spacing: 1px;
-      text-shadow: 0 0 5px rgba(0,0,0,0.2);
+      letter-spacing: 1.5px;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
     }
+    
+    /* FIXED: Voice controls section */
     .settings-panel {
       padding: 0.75rem 1rem;
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.25);
       display: flex;
-      gap: 1rem;
+      gap: 0.8rem;
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
@@ -245,14 +260,14 @@
       font-size: 0.75rem;
       color: #fff;
       font-weight: 600;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
     }
     .setting-group select,
     .setting-group input {
       padding: 0.4rem 0.6rem;
       border: none;
       border-radius: 10px;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.95);
       font-size: 0.85rem;
       outline: none;
       cursor: pointer;
@@ -260,9 +275,41 @@
     .setting-group input[type="range"] {
       width: 100px;
     }
+    
+    /* Voice control buttons */
+    .voice-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .voice-btn {
+      padding: 0.3rem 0.8rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .play-btn {
+      background: #51cf66;
+      color: white;
+    }
+    .play-btn:hover {
+      background: #40c057;
+    }
+    .stop-btn {
+      background: #ff6b6b;
+      color: white;
+    }
+    .stop-btn:hover {
+      background: #ee5a5a;
+    }
+    
+    /* FIXED: Chat box with proper spacing */
     .chat-box {
       flex: 1;
       padding: 1rem;
+      padding-bottom: 70px; /* FIXED: Extra space for footer */
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -284,7 +331,7 @@
     }
     .ai {
       align-self: flex-start;
-      background: rgba(255,255,255,0.85);
+      background: rgba(255,255,255,0.9);
       color: #333;
       border-bottom-left-radius: 2px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
@@ -313,26 +360,34 @@
     .typing-dots span:nth-child(3) {
       animation-delay: 0.4s;
     }
+    
+    /* FIXED: Listen button */
     .listen-btn {
-      display: block;
-      margin-top: 6px;
-      background: rgba(102,166,255,0.1);
+      display: inline-block;
+      margin-top: 8px;
+      background: rgba(102,166,255,0.15);
       color: #0072ff;
       border: 1px solid rgba(0,0,0,0.1);
       border-radius: 12px;
-      padding: 4px 10px;
+      padding: 6px 12px;
       font-size: 0.85rem;
       cursor: pointer;
       transition: 0.2s;
+      font-weight: 600;
     }
     .listen-btn:hover {
-      background: rgba(102,166,255,0.25);
+      background: rgba(102,166,255,0.3);
       transform: scale(1.05);
     }
+    .listen-btn:active {
+      transform: scale(0.95);
+    }
+    
+    /* Chat input area */
     .chat-input {
       display: flex;
       padding: 0.75rem;
-      background: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.3);
       backdrop-filter: blur(10px);
       gap: 0.5rem;
     }
@@ -372,19 +427,21 @@
       animation: pulse 1s infinite;
     }
     
-    /* Footer Styles - FIXED POSITION */
+    /* ============================================
+       FOOTER STYLES - FIXED POSITION
+       ============================================ */
     .footer {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 12px;
+      padding: 14px;
       text-align: center;
-      background: rgba(30, 30, 30, 0.95);
+      background: rgba(30, 30, 30, 0.96);
       backdrop-filter: blur(15px);
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       z-index: 1000;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 -3px 15px rgba(0,0,0,0.3);
     }
     .footer-text {
       background: linear-gradient(
@@ -403,16 +460,13 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       animation: gradientShift 5s ease infinite;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-    }
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      font-weight: 800;
+      letter-spacing: 1px;
     }
     
-    /* Custom Modal/Alert */
+    /* ============================================
+       CUSTOM MODAL
+       ============================================ */
     .custom-modal {
       display: none;
       position: fixed;
@@ -420,7 +474,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.6);
       z-index: 10000;
       justify-content: center;
       align-items: center;
@@ -470,6 +524,9 @@
       background: #ee5a5a;
     }
     
+    /* ============================================
+       ANIMATIONS
+       ============================================ */
     @keyframes fadeIn {
       from {opacity: 0; transform: translateY(10px);}
       to {opacity: 1; transform: translateY(0);}
@@ -482,8 +539,15 @@
       0%, 60%, 100% { transform: translateY(0); }
       30% { transform: translateY(-10px); }
     }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
     
-    /* Mobile Responsive */
+    /* ============================================
+       MOBILE RESPONSIVE
+       ============================================ */
     @media (max-width: 768px) {
       .sidebar {
         width: 100%;
@@ -498,13 +562,16 @@
       .app-container {
         flex-direction: column;
       }
+      .chat-header {
+        font-size: 1.1rem;
+      }
       .settings-panel {
         flex-wrap: wrap;
         gap: 0.5rem;
       }
       .setting-group {
         flex: 1;
-        min-width: 80px;
+        min-width: 70px;
       }
       .footer {
         font-size: 0.75rem;
@@ -517,13 +584,14 @@
       top: 1rem;
       left: 1rem;
       z-index: 101;
-      background: rgba(102,166,255,0.9);
+      background: rgba(102,166,255,0.95);
       border: none;
       padding: 0.5rem 1rem;
       border-radius: 10px;
       color: white;
       cursor: pointer;
       font-size: 1.2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
     @media (max-width: 768px) {
       .menu-toggle {
@@ -538,7 +606,9 @@
 </head>
 <body>
   
-  <!-- Login Page -->
+  <!-- ============================================
+       LOGIN PAGE
+       ============================================ -->
   <div id="loginPage" class="auth-container">
     <h2>🧠 SmartSpeak Login</h2>
     <div id="loginMessage"></div>
@@ -553,7 +623,9 @@
     </div>
   </div>
 
-  <!-- Signup Page -->
+  <!-- ============================================
+       SIGNUP PAGE
+       ============================================ -->
   <div id="signupPage" class="auth-container hidden">
     <h2>🧠 Create Account</h2>
     <div id="signupMessage"></div>
@@ -566,7 +638,9 @@
     </div>
   </div>
 
-  <!-- Forgot Password Page -->
+  <!-- ============================================
+       FORGOT PASSWORD PAGE
+       ============================================ -->
   <div id="forgotPasswordPage" class="auth-container hidden">
     <h2>Reset Password</h2>
     <p style="text-align:center; margin-bottom:1rem; color:#666;">Enter your email and we'll send you a reset link</p>
@@ -578,8 +652,11 @@
     </div>
   </div>
 
-  <!-- Main App Container -->
+  <!-- ============================================
+       MAIN APP CONTAINER
+       ============================================ -->
   <div id="appContainer" class="app-container hidden">
+    
     <!-- Sidebar -->
     <div class="sidebar">
       <div class="user-profile">
@@ -590,7 +667,7 @@
       <button class="new-chat-btn" onclick="startNewConversation()">+ New Conversation</button>
       
       <div class="conversations-list" id="conversationsList">
-        <!-- Conversations will be loaded here -->
+        <!-- Conversations loaded dynamically -->
       </div>
     </div>
 
@@ -598,6 +675,7 @@
     <div class="chat-container">
       <div class="chat-header">🧠 SmartSpeak AI English Tutor</div>
       
+      <!-- FIXED: Voice Controls Panel -->
       <div class="settings-panel">
         <div class="setting-group">
           <label>🌍 Accent</label>
@@ -606,7 +684,15 @@
             <option value="en-GB">🇬🇧 British</option>
             <option value="en-AU">🇦🇺 Australian</option>
             <option value="en-IN">🇮🇳 Indian</option>
-            <option value="en-PH" selected>🇵🇭 Filipino</option>
+            <option value="en-PH">🇵🇭 Filipino</option>
+          </select>
+        </div>
+        
+        <div class="setting-group">
+          <label>👤 Voice</label>
+          <select id="voiceGender">
+            <option value="female">👩 Female</option>
+            <option value="male">👨 Male</option>
           </select>
         </div>
         
@@ -618,6 +704,13 @@
         <div class="setting-group">
           <label>🎵 Pitch</label>
           <input type="range" id="pitchControl" min="0.5" max="2" step="0.1" value="1">
+        </div>
+        
+        <div class="setting-group">
+          <label>🔊 Controls</label>
+          <div class="voice-controls">
+            <button class="voice-btn stop-btn" onclick="stopSpeaking()">⏹ Stop</button>
+          </div>
         </div>
       </div>
 
@@ -631,7 +724,9 @@
     </div>
   </div>
 
-  <!-- Custom Modal for Confirmations -->
+  <!-- ============================================
+       CUSTOM MODAL
+       ============================================ -->
   <div id="customModal" class="custom-modal">
     <div class="modal-content">
       <h3 id="modalTitle">Confirm</h3>
@@ -643,17 +738,18 @@
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- ============================================
+       FOOTER
+       ============================================ -->
   <div class="footer">
-    <div class="footer-text">Developed by HMM</div>
+    <div class="footer-text">Developed by Heber Mayormita</div>
   </div>
   
   <!-- Mobile Menu Toggle -->
   <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-
   <script>
     // ============================================
-    // SUPABASE CONFIGURATION
+    // CONFIGURATION
     // ============================================
     const SUPABASE_URL = 'https://ceymeqjxsqrhcrxntrwh.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNleW1lcWp4c3FyaGNyeG50cndoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2Mzc4ODMsImV4cCI6MjA3NzIxMzg4M30.QKJRqrszrmlmX2wWvlNRofO8bd93mVBnRRYiPpcbkno';
@@ -661,18 +757,127 @@
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
     // ============================================
-    // GLOBAL VARIABLES
+    // GLOBAL STATE
     // ============================================
     let currentUser = null;
     let currentConversationId = null;
     let conversationHistory = [];
-    let recognition;
+    let recognition = null;
     let isListening = false;
     let modalCallback = null;
+    let currentUtterance = null; // FIXED: Track current speech
 
     // ============================================
-    // CUSTOM MODAL FUNCTIONS
+    // VOICE & SPEECH FUNCTIONS - FIXED
     // ============================================
+    
+    /**
+     * Get available voices matching accent and gender
+     */
+    function getVoiceForSettings() {
+      const accent = document.getElementById('accentSelect').value;
+      const gender = document.getElementById('voiceGender').value;
+      const voices = speechSynthesis.getVoices();
+      
+      // Map accents to voice language codes
+      const accentMap = {
+        'en-US': 'en-US',
+        'en-GB': 'en-GB',
+        'en-AU': 'en-AU',
+        'en-IN': 'en-IN',
+        'en-PH': 'en-US' // Filipino uses US English voices
+      };
+      
+      const targetLang = accentMap[accent] || 'en-US';
+      
+      // Filter voices by language
+      let matchingVoices = voices.filter(voice => 
+        voice.lang.startsWith(targetLang.split('-')[0])
+      );
+      
+      // Further filter by gender if possible
+      if (gender === 'female') {
+        const femaleVoices = matchingVoices.filter(voice => 
+          voice.name.toLowerCase().includes('female') ||
+          voice.name.toLowerCase().includes('woman') ||
+          voice.name.includes('Samantha') ||
+          voice.name.includes('Victoria') ||
+          voice.name.includes('Karen') ||
+          voice.name.includes('Moira') ||
+          voice.name.includes('Fiona') ||
+          voice.name.includes('Zira')
+        );
+        if (femaleVoices.length > 0) matchingVoices = femaleVoices;
+      } else {
+        const maleVoices = matchingVoices.filter(voice => 
+          voice.name.toLowerCase().includes('male') ||
+          voice.name.toLowerCase().includes('man') ||
+          voice.name.includes('Daniel') ||
+          voice.name.includes('David') ||
+          voice.name.includes('Alex') ||
+          voice.name.includes('George')
+        );
+        if (maleVoices.length > 0) matchingVoices = maleVoices;
+      }
+      
+      // Prefer voices matching exact language
+      const exactMatches = matchingVoices.filter(v => v.lang === targetLang);
+      if (exactMatches.length > 0) return exactMatches[0];
+      
+      // Fallback to first matching voice
+      return matchingVoices[0] || voices[0];
+    }
+    
+    /**
+     * Speak text with current settings - FIXED
+     */
+    function speakText(text) {
+      // Stop any ongoing speech
+      stopSpeaking();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      const voice = getVoiceForSettings();
+      
+      if (voice) {
+        utterance.voice = voice;
+      }
+      
+      utterance.lang = document.getElementById('accentSelect').value;
+      utterance.rate = parseFloat(document.getElementById('speedControl').value);
+      utterance.pitch = parseFloat(document.getElementById('pitchControl').value);
+      
+      // Track current utterance
+      currentUtterance = utterance;
+      
+      // Clear tracking when done
+      utterance.onend = () => {
+        currentUtterance = null;
+      };
+      
+      speechSynthesis.speak(utterance);
+    }
+    
+    /**
+     * Stop current speech - FIXED
+     */
+    function stopSpeaking() {
+      if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+        currentUtterance = null;
+      }
+    }
+    
+    // Load voices when available
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = () => {
+        console.log('Voices loaded:', speechSynthesis.getVoices().length);
+      };
+    }
+
+    // ============================================
+    // MODAL FUNCTIONS
+    // ============================================
+    
     function showConfirmModal(message, callback) {
       document.getElementById('modalMessage').textContent = message;
       document.getElementById('customModal').classList.add('show');
@@ -786,7 +991,7 @@
     }
 
     // ============================================
-    // UI NAVIGATION FUNCTIONS
+    // UI NAVIGATION
     // ============================================
     
     function showLogin() {
@@ -822,6 +1027,10 @@
       const el = document.getElementById(elementId);
       el.innerHTML = `<div class="${type}-message">${message}</div>`;
       setTimeout(() => el.innerHTML = '', 5000);
+    }
+
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('open');
     }
 
     // ============================================
@@ -872,7 +1081,7 @@
         .insert([{
           user_id: currentUser.id,
           title: 'New Conversation'
-          }])
+        }])
         .select()
         .single();
       
@@ -885,7 +1094,7 @@
       conversationHistory = [];
       document.getElementById('chatBox').innerHTML = '';
       
-      // RE-ENABLE INPUT CONTROLS - FIX #1
+      // Re-enable controls
       document.getElementById('sendBtn').disabled = false;
       document.getElementById('userInput').disabled = false;
       document.getElementById('userInput').focus();
@@ -919,16 +1128,17 @@
       data.forEach(msg => {
         const bubble = document.createElement('div');
         bubble.className = `bubble ${msg.role}`;
+        const escapedContent = msg.content.replace(/`/g, '\\`').replace(/'/g, "\\'");
         bubble.innerHTML = `
           ${msg.content.replace(/\n/g, '<br>')}
-          ${msg.role === 'assistant' ? `<button class="listen-btn" onclick="speakText(\`${msg.content.replace(/`/g, '\\`')}\`)">🎧 Listen Again</button>` : ''}
+          ${msg.role === 'assistant' ? `<button class="listen-btn" onclick="speakText(\`${escapedContent}\`)">🎧 Listen</button>` : ''}
         `;
         chatBox.appendChild(bubble);
       });
       
       chatBox.scrollTop = chatBox.scrollHeight;
       
-      // RE-ENABLE INPUT CONTROLS - FIX #2
+      // Re-enable controls
       document.getElementById('sendBtn').disabled = false;
       document.getElementById('userInput').disabled = false;
       document.getElementById('userInput').focus();
@@ -936,7 +1146,6 @@
       loadConversations();
     }
 
-    // CUSTOM CONFIRM DIALOG - FIX #3
     function confirmDeleteConversation(conversationId) {
       showConfirmModal('Do you want to delete this conversation?', (confirmed) => {
         if (confirmed) {
@@ -968,7 +1177,6 @@
     async function saveMessage(role, content) {
       if (!currentConversationId) {
         await startNewConversation();
-        // Wait a bit for conversation to be created
         await new Promise(resolve => setTimeout(resolve, 500));
       }
       
@@ -1002,7 +1210,6 @@
       
       loadConversations();
     }
-
     // ============================================
     // CHAT FUNCTIONALITY
     // ============================================
@@ -1011,10 +1218,8 @@
     const userInput = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
     const micBtn = document.getElementById('micBtn');
-    const accentSelect = document.getElementById("accentSelect");
-    const speedControl = document.getElementById("speedControl");
-    const pitchControl = document.getElementById("pitchControl");
 
+    // Initialize Speech Recognition
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognition = new SpeechRecognition();
@@ -1060,15 +1265,6 @@
       }
     });
 
-    function speakText(text) {
-      speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = accentSelect.value;
-      utter.rate = parseFloat(speedControl.value);
-      utter.pitch = parseFloat(pitchControl.value);
-      speechSynthesis.speak(utter);
-    }
-
     function showTypingIndicator() {
       const typingDiv = document.createElement('div');
       typingDiv.className = 'typing';
@@ -1087,12 +1283,10 @@
       const message = userInput.value.trim();
       if (!message) return;
 
-      // Create conversation if needed
       if (!currentConversationId) {
         await startNewConversation();
       }
 
-      // Disable input while processing
       sendBtn.disabled = true;
       userInput.disabled = true;
 
@@ -1135,12 +1329,15 @@
 
         const aiBubble = document.createElement("div");
         aiBubble.className = "bubble ai";
+        const escapedReply = aiReply.replace(/`/g, '\\`').replace(/'/g, "\\'");
         aiBubble.innerHTML = `
           ${aiReply.replace(/\n/g, '<br>')}
-          <button class="listen-btn" onclick="speakText(\`${aiReply.replace(/`/g, '\\`')}\`)">🎧 Listen Again</button>
+          <button class="listen-btn" onclick="speakText(\`${escapedReply}\`)">🎧 Listen</button>
         `;
         chatBox.appendChild(aiBubble);
         chatBox.scrollTop = chatBox.scrollHeight;
+        
+        // Auto-play response
         speakText(aiReply);
 
       } catch (error) {
@@ -1155,7 +1352,6 @@
         chatBox.appendChild(errorBubble);
         chatBox.scrollTop = chatBox.scrollHeight;
       } finally {
-        // RE-ENABLE INPUT - FIX #4
         sendBtn.disabled = false;
         userInput.disabled = false;
         userInput.focus();
@@ -1173,29 +1369,37 @@
       
       const aiBubble = document.createElement("div");
       aiBubble.className = "bubble ai";
+      const escapedMsg = welcomeMsg.replace(/`/g, '\\`').replace(/'/g, "\\'");
       aiBubble.innerHTML = `
         ${welcomeMsg}
-        <button class="listen-btn" onclick="speakText(\`${welcomeMsg}\`)">🎧 Listen Again</button>
+        <button class="listen-btn" onclick="speakText(\`${escapedMsg}\`)">🎧 Listen</button>
       `;
       chatBox.appendChild(aiBubble);
       speakText(welcomeMsg);
     }
 
-    function toggleSidebar() {
-      document.querySelector('.sidebar').classList.toggle('open');
-    }
-
+    // ============================================
+    // GLOBAL FUNCTION EXPORTS
+    // ============================================
     window.speakText = speakText;
+    window.stopSpeaking = stopSpeaking;
     window.startNewConversation = startNewConversation;
     window.loadConversation = loadConversation;
     window.confirmDeleteConversation = confirmDeleteConversation;
     window.deleteConversation = deleteConversation;
     window.toggleSidebar = toggleSidebar;
+    window.showConfirmModal = showConfirmModal;
+    window.closeModal = closeModal;
     
+    // ============================================
+    // INITIALIZATION
+    // ============================================
     checkAuth();
   </script>
   
-  <!-- PWA Install Script -->
+  <!-- ============================================
+       PWA SERVICE WORKER
+       ============================================ -->
   <script>
     let deferredPrompt;
     
@@ -1208,9 +1412,8 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js')
         .then(reg => console.log('Service Worker registered'))
-        .catch(err => console.log('Service Worker registration failed'));
+        .catch(err => console.log('Service Worker registration failed:', err));
     }
   </script>
 </body>
 </html>
-
